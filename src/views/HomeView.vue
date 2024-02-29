@@ -1,4 +1,15 @@
-<script setup>
+<script>
+export default {
+  data() {
+    return {
+      
+    }
+  },
+
+  methods: {
+
+ },
+};
 
 </script>
 
@@ -23,10 +34,13 @@
         </tr>
       </thead>
       <tbody class="data-show">
-
+        
       </tbody>
     </table>
     <button class="enter-to-local w-32 rounded-lg text-2xl bg-red-50" type="button">存進local</button>
+    <button class="enter-to-local w-32 rounded-lg text-2xl bg-red-50" type="button">新增</button>
+    <button class="enter-to-local w-32 rounded-lg text-2xl bg-red-50" type="button">刪除</button>
+
   </div>
 </div>
 </template>

@@ -18,7 +18,7 @@ export default {
   // 預處理拿到的資料,他有暫存的功能,所以我們可以拿整包資料,利用判斷式把我們資料做篩選
   computed:{
     selectnews(){
-      this.arr.filter((item)=>{
+      return this.arr.filter((item)=>{
         if(this.switchBtn === 'all'){
           return this.arr;
         }else if(this.switchBtn === '已完成'){
@@ -34,15 +34,16 @@ export default {
 
   pushobj() {
     console.log(this.news);
-    const id = this.arr.length;
+    const id = this.arr.length >0 ? this.arr[this.arr.length-1].id : 0;
     this.obj = {
       checkBox : false,
       msgSwitch : false,
       news : this.news,
-      id : id,
+      id : id+1,
     };
     
     this.arr.push(this.obj);
+    console.log(this.arr);
     localStorage.setItem('news', JSON.stringify(this.arr));
 
   },
@@ -68,7 +69,14 @@ export default {
   },
   editInput(e) {
     this.aaa = e.target.value;
-  }
+  },
+  changecheckbox(){
+    localStorage.setItem('news', JSON.stringify(this.arr));
+
+  },
+  slotstab(string) {
+    this.switchBtn = string;
+  },
  },
 };
 
@@ -81,9 +89,9 @@ export default {
       <button class="add-Todo w-20 rounded-lg text-2xl ml-8 bg-red-50" @click="pushobj()" type="button">新增</button>
     </div>
     <div class="search-btn m-4 text-2xl">
-      <button class="all w-20 rounded-lg text-2xl ml-5 bg-red-50" type="button" data-search="all">全部</button>
-      <button class="is-todo w-20 rounded-lg text-2xl ml-5 bg-red-50" type="button" data-search="isTodo">已執行</button>
-      <button class="not-todo w-20 rounded-lg text-2xl ml-5 bg-red-50" type="button" data-search="notTodo">未執行</button>
+      <button class="all w-20 rounded-lg text-2xl ml-5 bg-red-50" type="button" :class="{'active':switchBtn ==='all'}" @click="slotstab('all')">全部</button>
+      <button class="is-todo w-20 rounded-lg text-2xl ml-5 bg-red-50 " type="button" :class="{'active':switchBtn ==='已完成'}" @click="slotstab('已完成')">已執行</button>
+      <button class="not-todo w-20 rounded-lg text-2xl ml-5 bg-red-50" type="button" :class="{'active':switchBtn ==='未完成'}" @click="slotstab('未完成')">未執行</button>
     </div>
     <table class="todo  border-4 text-2xl">
       <thead>
@@ -94,8 +102,8 @@ export default {
         </tr>
       </thead>
       <tbody class="data-show">
-        <tr v-for="( item, index) in arr" :key="index">
-          <th><input type="checkbox"></th>
+        <tr v-for="( item, index) in selectnews" :key="item.id">
+          <th><input type="checkbox" v-model="item.checkBox" @change="changecheckbox()"></th>
           <th v-if="item.msgSwitch === false">{{ item.news }}</th>
           <th v-else><input type="text" @change="(e) => editInput(e)"></th>
           <th>
@@ -105,8 +113,12 @@ export default {
         </tr>
       </tbody>
     </table>
-    
-
   </div>
 </div>
 </template>
+<style scoped>
+
+.active {
+  @apply bg-white text-black;
+}
+</style>
